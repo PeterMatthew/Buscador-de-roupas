@@ -2,6 +2,13 @@
 __pycache__/
 *.py[cod]
 *$py.class
+deepfashion2/
+embedding/
+experiments/
+runs/
+datasets/
+yolov8l.pt
+yolov8n.pt
 
 # C extensions
 *.so

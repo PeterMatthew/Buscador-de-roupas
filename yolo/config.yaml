@@ -1,0 +1,19 @@
+path: ../datasets
+train: images/train
+val: images/val
+test: images/test
+
+names:
+  0: short_sleeve_top
+  1: trousers
+  2: shorts
+  3: long_sleeve_top
+  4: skirt
+  5: vest_dress
+  6: short_sleeve_dress
+  7: vest
+  8: long_sleeve_outwear
+  9: long_sleeve_dress
+  10: sling_dress
+  11: sling
+  12: short_sleeve_outwear
