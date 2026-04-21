@@ -4,11 +4,11 @@ __pycache__/
 *$py.class
 deepfashion2/
 embedding/
-experiments/
 runs/
 datasets/
 yolov8l.pt
 yolov8n.pt
+best.pt
 
 # C extensions
 *.so
