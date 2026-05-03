@@ -31,3 +31,17 @@ e instalar as dependências
 ```bash
 pip install -r requirements.txt
 ```
+
+para usar a interface de usuário, entre na pasta app e ative a API com:
+
+```bash
+fastapi dev
+```
+
+depois entre na pasta frontend e copie o conteúdo de .env.example em .env, para ativar o nextJS:
+
+```bash
+npm run dev
+```
+
+e acesse http://localhost:3000/
