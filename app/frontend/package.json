@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "node -e \"const fs = require('fs'); const ip = process.env.DROPLET_IP; fs.writeFileSync('public/_redirects', `/backend/* http://${ip}/:splat 200!\\n`);\" && next build",
     "start": "next start",
     "lint": "next lint"
   },
