@@ -7,6 +7,8 @@ import { ProductGrid } from "./components/ProductGrid";
 import DetectedItem from "./components/DetectedItem";
 import { Detection } from "./types";
 
+const SUPPORTED_CATEGORIES = ["short_sleeve_top"];
+
 const Home = () => {
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [imageSrc, setImageSrc] = useState<string | null>(null);
@@ -19,6 +21,8 @@ const Home = () => {
     similarItems,
     pagination,
     isSearching,
+    temperature,
+    setTemperature,
     search,
     setSimilarItems,
     setPagination,
@@ -39,10 +43,33 @@ const Home = () => {
     setPagination(null);
   };
 
-  const handleSearch = (detection: Detection, offset: number = 0) => {
+  const handleSearch = (
+    detection: Detection,
+    offset: number = 0,
+    tempOverride?: number,
+  ) => {
     if (!imageFile) return;
+    // Guardrail: Check if category is supported
+    if (!SUPPORTED_CATEGORIES.includes(detection.category)) {
+      setSelectedDetection(detection);
+      setSimilarItems([]);
+      setPagination(null);
+      return;
+    }
+
     setSelectedDetection(detection);
-    search(imageFile, detection, offset);
+    search(imageFile, detection, offset, tempOverride);
+  };
+
+  const handleTemperatureChange = (newTemp: number) => {
+    setTemperature(newTemp);
+    // Re-trigger search with the selected detection if one is active
+    if (
+      selectedDetection &&
+      SUPPORTED_CATEGORIES.includes(selectedDetection.category)
+    ) {
+      handleSearch(selectedDetection, 0, newTemp);
+    }
   };
 
   return (
@@ -73,7 +100,7 @@ const Home = () => {
                   imageHeight={imageRef.current?.naturalHeight || 0}
                   category={det.category}
                   isSelected={selectedDetection?.box === det.box}
-                  onClick={() => handleSearch(det)}
+                  onClick={() => handleSearch(det, 0)}
                 />
               ))}
 
@@ -86,8 +113,33 @@ const Home = () => {
             </div>
           )}
 
+          {/* Temperature Control Slider */}
+          {selectedDetection &&
+            SUPPORTED_CATEGORIES.includes(selectedDetection.category) && (
+              <div className="w-full max-w-md my-6 p-4 border rounded-lg bg-gray-50 flex flex-col items-center gap-2">
+                <div className="flex justify-between w-full text-xs font-medium text-gray-700">
+                  <span>Exact match</span>
+                  <span className="font-semibold text-black">
+                    Temperature: {temperature.toFixed(2)}
+                  </span>
+                  <span>Exploration</span>
+                </div>
+                <input
+                  type="range"
+                  min="0.01"
+                  max="1.0"
+                  step="0.05"
+                  value={temperature}
+                  onChange={(e) =>
+                    handleTemperatureChange(parseFloat(e.target.value))
+                  }
+                  className="w-full h-1.5 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-black"
+                />
+              </div>
+            )}
+
           {/* Result Section */}
-          <section className="w-full mt-8">
+          <section className="w-full mt-4">
             {isSearching ? (
               <div className="text-center py-16">
                 <div className="w-8 h-8 border-2 border-black border-t-transparent rounded-full animate-spin mx-auto mb-3" />

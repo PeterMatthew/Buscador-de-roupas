@@ -11,10 +11,18 @@ export const useSearch = () => {
   const [similarItems, setSimilarItems] = useState<SimilarItem[]>([]);
   const [pagination, setPagination] = useState<PaginationInfo | null>(null);
   const [isSearching, setIsSearching] = useState(false);
+  const [temperature, setTemperature] = useState<number>(0.5); // Default temperature = 1.0
 
-  const search = async (imageFile: File, detection: Detection, offset = 0) => {
+  const search = async (
+    imageFile: File,
+    detection: Detection,
+    offset = 0,
+    tempOverride?: number,
+  ) => {
     setIsSearching(true);
     const [x0, y0, x1, y1] = detection.box;
+    const activeTemperature =
+      tempOverride !== undefined ? tempOverride : temperature;
 
     const formData = new FormData();
     formData.append("image", imageFile);
@@ -24,6 +32,7 @@ export const useSearch = () => {
     formData.append("y1", y1.toString());
     formData.append("category", detection.category);
     formData.append("offset", offset.toString());
+    formData.append("temperature", activeTemperature.toString()); // Sent to backend
 
     try {
       const res = await fetch(
@@ -48,6 +57,8 @@ export const useSearch = () => {
     similarItems,
     pagination,
     isSearching,
+    temperature,
+    setTemperature,
     search,
     setSimilarItems,
     setPagination,
