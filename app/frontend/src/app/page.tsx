@@ -9,6 +9,13 @@ import { Detection } from "./types";
 
 const SUPPORTED_CATEGORIES = ["short_sleeve_top"];
 
+// Predefined temperature regimes for the experiment
+const TEMPERATURE_OPTIONS = [
+  { value: 0.05, label: "Strict" },
+  { value: 1.0, label: "Balanced" },
+  { value: 2.5, label: "Exploratory" },
+];
+
 const Home = () => {
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [imageSrc, setImageSrc] = useState<string | null>(null);
@@ -113,28 +120,37 @@ const Home = () => {
             </div>
           )}
 
-          {/* Temperature Control Slider */}
+          {/* Minimalist Radiobox Group */}
           {selectedDetection &&
             SUPPORTED_CATEGORIES.includes(selectedDetection.category) && (
-              <div className="w-full max-w-md my-6 p-4 border rounded-lg bg-gray-50 flex flex-col items-center gap-2">
-                <div className="flex justify-between w-full text-xs font-medium text-gray-700">
-                  <span>Exact match</span>
-                  <span className="font-semibold text-black">
-                    Temperature: {temperature.toFixed(2)}
-                  </span>
-                  <span>Exploration</span>
-                </div>
-                <input
-                  type="range"
-                  min="0.01"
-                  max="1.0"
-                  step="0.05"
-                  value={temperature}
-                  onChange={(e) =>
-                    handleTemperatureChange(parseFloat(e.target.value))
-                  }
-                  className="w-full h-1.5 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-black"
-                />
+              <div className="flex items-center justify-center gap-6 my-6 text-xs text-neutral-600">
+                <span className="uppercase tracking-widest text-neutral-400 font-medium">
+                  Mode:
+                </span>
+                {TEMPERATURE_OPTIONS.map((option) => (
+                  <label
+                    key={option.value}
+                    className="flex items-center gap-2 cursor-pointer select-none hover:text-black transition-colors"
+                  >
+                    <input
+                      type="radio"
+                      name="temperature_regime"
+                      value={option.value}
+                      checked={temperature === option.value}
+                      onChange={() => handleTemperatureChange(option.value)}
+                      className="accent-black cursor-pointer"
+                    />
+                    <span
+                      className={
+                        temperature === option.value
+                          ? "font-medium text-black"
+                          : ""
+                      }
+                    >
+                      {option.label}
+                    </span>
+                  </label>
+                ))}
               </div>
             )}
 
