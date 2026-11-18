@@ -13,7 +13,7 @@ const categoryColors: { [key: string]: string } = {
   short_sleeve_top: "#FF0000",
   long_sleeve_top: "#00FF00",
   skirt: "#0000FF",
-  shorts: "#FFFF00",
+  shorts: "#9c9c09",
   trousers: "#FF00FF",
   short_sleeve_dress: "#00FFFF",
   long_sleeve_dress: "#FFA500",
